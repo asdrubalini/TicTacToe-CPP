@@ -1,7 +1,7 @@
 #include <iostream>
 #include "TicTacToe.h"
 
-cell exchange_player(cell player) {
+player exchange_player(cell player) {
 	switch (player) {
 		case PLAYER_ONE:
 			return PLAYER_TWO;
@@ -12,18 +12,30 @@ cell exchange_player(cell player) {
 	}
 }
 
+bool validate_input(int input) {
+	return input >= 1 && input <= 9;
+}
+
 int main() {
 	TicTacToe tris;
-	bool someone_won = false;
-	cell current_player = PLAYER_ONE;
+	bool game_terminated = false;
+	player current_player = PLAYER_ONE;
 
-	while (!someone_won) {
+	while (!game_terminated) {
 		std::cout << "E' il turno di " << tris.get_player(current_player) << std::endl;
 		tris.print_playground();
 		
-		std::cout << "Inserisci il numero della casella in cui vuoi inserire la pedina: ";
+		std::cout << "Inserisci il numero della casella in cui vuoi inserire la pedina (1 -> 9): ";
 		int pos;
 		std::cin >> pos;
+
+		// First check if the user input is valid or not
+		if (!validate_input(pos)) {
+			std::cout << "\"" << pos << "\"" << " invalid input" << std::endl;
+			return 1;
+		}
+
+		pos--;		// Array's indexes starts from zero, which is not user friendly		
 
 		if (!tris.is_valid_move(pos)) {
 			std::cout << "Move not valid" << std::endl;
@@ -34,8 +46,12 @@ int main() {
 		}
 
 		if (tris.check_tris() != NO_PLAYER) {
-			std::cout << tris.get_player(current_player) << " has won!";
-			someone_won = true;
+			std::cout << tris.get_player(current_player) << " has won!" << std::endl;
+			game_terminated = true;
+		}
+		else if (tris.check_parity()) {
+			std::cout << "Game terminated with parity" << std::endl;
+			game_terminated = true;
 		}
 
 		current_player = exchange_player(current_player);

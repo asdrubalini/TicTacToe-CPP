@@ -32,12 +32,23 @@ player TicTacToe::check_tris() {
 	return NO_PLAYER;
 }
 
+bool TicTacToe::check_parity() {
+	// If the moves are less than nine, return false
+	if (moves == 9 && check_tris() == NO_PLAYER) {
+		return true;
+	}
+
+	return false;
+}
+
 bool TicTacToe::is_valid_move(int pos) {
+	// Check if the required position is already taken or not
 	signed int current = playground[pos];
 	return (current == NO_PLAYER);
 }
 
 void TicTacToe::add_move(int pos, player player) {
+	moves++;
 	playground[pos] = player;
 }
 
@@ -45,10 +56,10 @@ std::string TicTacToe::get_player(player player) {
 	// Return player as string
 	switch (player) {
 		case PLAYER_ONE:
-			return "player one";
+			return "Player one";
 			break;
 		case PLAYER_TWO:
-			return "player two";
+			return "Player two";
 			break;
 		case NO_PLAYER:
 			return "";
@@ -76,15 +87,12 @@ void TicTacToe::print_playground() {
 	for (int i = 0; i < sizeof(playground) / sizeof(playground[0]); i++) {
 		switch (playground[i]) {
 			case -1:
-				//std::cout << "-1 ";
 				std::cout << "o ";
 				break;
 			case 1:
-				//std::cout << "1 ";
 				std::cout << "x ";
 				break;
 			case 0:
-				//std::cout << "0 ";
 				std::cout << "# ";
 				break;
 		}
